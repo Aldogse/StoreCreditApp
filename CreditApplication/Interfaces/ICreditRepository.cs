@@ -15,7 +15,9 @@ namespace CreditApplication.Interfaces
         void AddCustomerDetailsAsync(Customers customer);
 
         //PRODUCTS QUERIES
-        Task<Products> GetProduct(string ProductName);
+        Task<Products> GetProductByName(string ProductName);
+        Task<Products> GetProductById(int ProductId);
         Task<Products> AddProduct(ProductDTO product);
+        Task<bool> UpdateProduct(int ProductId,ProductDTO updatedProduct);
     }
 }

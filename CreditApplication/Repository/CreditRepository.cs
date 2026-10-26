@@ -72,7 +72,7 @@ namespace CreditApplication.Repository
             return newProduct;
         }
 
-        public async Task<Products> GetProduct(string ProductName)
+        public async Task<Products> GetProductByName(string ProductName)
         {
             var exist = await _dbContext.Products
                 .FirstOrDefaultAsync(i => i.ProductName.ToLower() == ProductName.ToLower());
@@ -80,5 +80,19 @@ namespace CreditApplication.Repository
             return exist;
         }
 
+        public async Task<Products> GetProductById(int ProductId)
+        {
+            return  await _dbContext.Products.FindAsync(ProductId);
+        }
+
+        public async Task<bool> UpdateProduct(int ProductId, ProductDTO updatedProduct)
+        {
+           var update =  await _dbContext.Products.Where(i => i.ProductId == ProductId)
+                .ExecuteUpdateAsync
+                (i => i.SetProperty(i => i.ProductName, updatedProduct.ProductName)
+                .SetProperty(i => i.Price, updatedProduct.Price));
+
+            return update > 0;
+        }
     }
 }

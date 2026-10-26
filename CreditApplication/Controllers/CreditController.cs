@@ -56,10 +56,10 @@ namespace CreditApplication.Controllers
         }
 
         [Authorize(Roles = "Owner")]
-        [HttpPost("AddProducts")]
+        [HttpPost("AddProduct")]
         public async Task<IActionResult> AddProduct([FromBody]ProductDTO product)
         {
-            var exist = await _creditRepository.GetProduct(product.ProductName);
+            var exist = await _creditRepository.GetProductByName(product.ProductName);
 
             //check if the product exist
             if(exist != null)
@@ -76,7 +76,26 @@ namespace CreditApplication.Controllers
             {
                 message = $"{prod.ProductName} has been added!"
             });
+        }
 
+        [Authorize(Roles = "Owner")]
+        [HttpPost("UpdateProduct/{ProductId}")]
+        public async Task<IActionResult> UpdateProduct([FromQuery] int ProductId, [FromBody]ProductDTO Product)
+        {
+           var update = await _creditRepository.UpdateProduct(ProductId, Product);
+
+            if (!update)
+            {
+                return BadRequest(new
+                {
+                    message = "Cannot update the Product!"
+                });
+            }
+
+            return Ok(new
+            {
+                message = "Product updated successfully!"
+            });
         }
     }
 }
